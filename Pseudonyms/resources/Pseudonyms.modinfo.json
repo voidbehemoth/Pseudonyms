@@ -1,0 +1,26 @@
+{
+  "HarmonyId": "voidbehemoth.pseudonyms",
+  "DisplayName": "Pseudonyms",
+  "Authors": [
+    "VoidBehemoth"
+  ],
+  "Description": "Lets you randomize your nickname. Find the appropriate files in ModFolders. Delete files to reset names.",
+  "Version": "1.0.0",
+  "RequiredMods": [],
+  "Settings": {
+    "CheckboxSettings": [
+      {
+        "Name": "Use First & Last Names",
+        "Description": "Whether or not to use first and last names (each randomized separately) or use one-part names.",
+        "DefaultValue": true,
+        "AvailableInGame": true
+      },
+      {
+        "Name": "Random Names",
+        "Description": "Whether or not to randomize names at all.",
+        "DefaultValue": true,
+        "AvailableInGame": true
+      }
+    ]
+  }
+}
