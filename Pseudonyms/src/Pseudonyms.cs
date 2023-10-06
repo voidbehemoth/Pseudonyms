@@ -95,9 +95,11 @@ namespace Pseudonyms
 
         public static void HandleGamePhaseChanged(GameInfo gameInfo)
         {
-            if (gameInfo.gamePhase != Server.Shared.State.GamePhase.PICK_NAMES || Pepper.IsMyInGameNameSet()) return;
+            if (gameInfo.gamePhase != Server.Shared.State.GamePhase.PICK_NAMES) return;
 
-            if (ModSettings.GetBool("Random Names")) Utils.NameHelper.SetRandomName();
+            
+
+            if (ModSettings.GetBool("Random Names", "voidbehemoth.pseudonyms")) Utils.NameHelper.SetRandomName();
         }
     }
 }

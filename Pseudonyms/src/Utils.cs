@@ -31,9 +31,11 @@ namespace Pseudonyms.Utils
 
         public static void SetRandomName()
         {
+            if (Pepper.IsMyInGameNameSet()) return;
+
             Logger.Log("Setting random name");
 
-            bool useFirstAndLastNames = ModSettings.GetBool("Use First & Last Names");
+            bool useFirstAndLastNames = ModSettings.GetBool("Use First & Last Names", "voidbehemoth.pseudonyms");
 
             string tempName, name;
             do
