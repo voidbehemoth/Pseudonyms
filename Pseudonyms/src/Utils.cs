@@ -73,6 +73,7 @@ namespace Pseudonyms.Utils
             } catch (Exception e)
             {
                 Logger.Log("error while getting random name: " + e);
+                Logger.Log("Cached mono names: " + _cachedMonoNames.ToString());
             }
             
             return name;
