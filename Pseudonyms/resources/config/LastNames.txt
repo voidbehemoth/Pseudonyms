@@ -24,7 +24,7 @@ Annottson
 Anotson
 Anson
 Apilby
-Appil Seller
+Appil
 Appilby
 Appilton
 Appylton
@@ -127,7 +127,8 @@ Beilleres
 Bekwith
 Bekwyth
 Belamy
-Beleby	Belemy
+Beleby
+Belemy
 Belenny
 Belford
 Bell
@@ -278,7 +279,8 @@ Brignall
 Britt
 Brokden
 Broket
-Brokett	Brokholes
+Brokett
+Brokholes
 Brokholez
 Brokker
 Broudster
@@ -456,7 +458,8 @@ Coke
 Cokehill
 Coker
 Cokhill
-Cokill	Cokker
+Cokill
+Cokker
 Cokkir
 Col
 Cole
@@ -507,7 +510,8 @@ Coup
 Coupeland
 Coupemanthorpp
 Couper
-Coupland	Courtnay
+Coupland
+Courtnay
 Courtney
 Courtny
 Coutheron
@@ -575,7 +579,8 @@ Davy
 Davyas
 Davyson
 Daweson
-Dawson	Day
+Dawson
+Day
 Daymysell
 Dayvell
 Deken
@@ -593,7 +598,8 @@ Depedale
 Depeden
 Dernyngton
 Deverell
-Dewe	Diconson
+Dewe
+Diconson
 Doblay
 Dobley
 Dogeson
@@ -611,7 +617,8 @@ Dryng
 Drynge
 Dubber
 Dubley
-Duffeld	del Duffeld
+Duffeld
+del Duffeld
 Duffelde
 Dughty
 Duinvyll
@@ -639,7 +646,8 @@ Elis
 Ellerson
 de Ellerson
 Ellerton
-Elvet	Elvett
+Elvet
+Elvett
 Elvyngton
 Elwald
 Elwyn
@@ -651,7 +659,8 @@ Emrik
 Enveld
 Errard
 Escryk
-Essby	Essedale
+Essby
+Essedale
 Essham
 de Essham
 Essheton
@@ -663,7 +672,8 @@ de Esshton
 Esshwra
 Esshwraa
 Esteby
-Esterby	de Esthorp
+Esterby
+de Esthorp
 Eston
 de Eston
 Estton
@@ -721,7 +731,8 @@ Flesshewer
 Fletcher
 Folifait
 Folyfayte
-Foreste	Forester
+Foreste
+Forester
 Forster
 Forstere
 Foster
@@ -744,7 +755,8 @@ Fraunkeleyn
 Fraunklay
 Fraunklayne
 Fraxton
-Freman	le Frerelane
+Freman	
+le Frerelane
 Fresell
 Fressell
 Frissell
@@ -942,7 +954,8 @@ Hauke
 Hauslyn
 Haustelyn
 Havercroft
-Hawardyne	Hawk
+Hawardyne
+Hawk
 Hawke
 Haxay
 Haxey
@@ -990,7 +1003,8 @@ Heseham
 Hesil
 Hesill
 Hesillwod
-Hesilwod	Heslwod
+Hesilwod
+Heslwod
 Heslyngton
 Hessill
 Hessilwod
@@ -1039,7 +1053,8 @@ Hortford
 Horton
 Hostiler
 Hostiller
-Hotchonson	Housom
+Hotchonson
+Housom
 Houson
 Hoveden
 Hovyngam
@@ -1152,7 +1167,8 @@ Key
 Kighlay
 Kighlay
 Kighley
-Kilburn	de Kilburn
+Kilburn
+de Kilburn
 Killom
 Killynghall
 King
@@ -1213,7 +1229,8 @@ de Laycestre
 Layerthorp
 Layton
 Lechelay
-Lede	Ledes
+Lede
+Ledes
 Ledys
 del Lee
 Leedes
@@ -1334,7 +1351,8 @@ de Marton
 Maryner
 Maryot
 Masham
-Mason	Massham
+Mason
+Massham
 Masyng
 Maunby
 Maundevyle
@@ -1641,7 +1659,8 @@ Raynalde
 Rayner
 Raynold
 Raysebek
-Rede	Redenesse
+Rede
+Redenesse
 Remyngton
 Rest
 Revetour
@@ -1766,7 +1785,9 @@ Scotton
 Scrawesburgh
 del Se
 del See
-Selby	de Selby
+Selby
+de Selby
+Seller
 Selles
 Semer
 Semere
@@ -1822,7 +1843,8 @@ Skynwyn
 Skypwith
 Slater
 Sledman
-Small	Smawes
+Small
+Smawes
 Smith
 Smyth
 Smythe
@@ -1956,7 +1978,8 @@ Tesdale
 Tesedale
 Thakwraa
 Thannibour
-Therlthwayte	Thirland
+Therlthwayte
+Thirland
 Thirn
 Thirsk
 Thomas

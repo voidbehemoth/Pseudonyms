@@ -21,6 +21,24 @@
         "DefaultValue": true,
         "AvailableInGame": true
       }
+    ],
+    "IntegerInputSettings": [
+      {
+        "Name": "Chance of Title (%)",
+        "Description": "",
+        "DefaultValue": 10,
+        "MinValue": 0,
+        "MaxValue": 100,
+        "AvailableInGame": true
+      },
+      {
+        "Name": "Chance of Suffix (%)",
+        "Description": "",
+        "DefaultValue": 5,
+        "MinValue": 0,
+        "MaxValue": 100,
+        "AvailableInGame": true
+      }
     ]
   }
 }

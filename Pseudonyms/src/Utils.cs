@@ -28,6 +28,8 @@ namespace Pseudonyms.Utils
         private static string[] _cachedFirstNames;
         private static string[] _cachedLastNames;
         private static string[] _cachedMonoNames;
+        private static string[] _cachedSuffixes;
+        private static string[] _cachedTitles;
 
         public static void SetRandomName()
         {
@@ -36,49 +38,47 @@ namespace Pseudonyms.Utils
             Logger.Log("Setting random name");
 
             bool useFirstAndLastNames = ModSettings.GetBool("Use First & Last Names", "voidbehemoth.pseudonyms");
+            double chanceSuffix = ModSettings.GetInt("Chance of Suffix (%)", "voidbehemoth.pseudonyms") / 100f;
+            double chanceTitle = ModSettings.GetInt("Chance of Title (%)", "voidbehemoth.pseudonyms") / 100f;
 
             string tempName, name;
             do
             {
-                tempName = GetRandomName(useFirstAndLastNames);
-                tempName.Trim();
+                tempName = GetRandomName(useFirstAndLastNames, chanceTitle, chanceSuffix).Trim();
             } while (String.IsNullOrEmpty(tempName) || !ValidateName(tempName));
             name = tempName;
 
-            PlayerNameMessage message = new PlayerNameMessage((byte)Pepper.GetMyPosition(), name);
-            Service.Game.Network.Send(message);
+            // PlayerNameMessage message = new PlayerNameMessage((byte)Pepper.GetMyPosition(), name);
+            // Service.Game.Network.Send(message);
             Storage.SetString(Storage.Key.GameName, name);
             Storage.Save();
 
-            Logger.Log("Set name to " + name);
+            // Logger.Log("Set name to " + name);
 
             _cachedFirstNames = null; 
             _cachedLastNames = null; 
             _cachedMonoNames = null;
+            _cachedSuffixes = null;
+            _cachedTitles = null;
         }
 
         
-        public static string GetRandomName(bool useFirstAndLastNames)
+        public static string GetRandomName(bool useFirstAndLastNames, double chanceTitle, double chanceSuffix)
         {
-            string name = "John Doe";
-            try
-            {
-                if (useFirstAndLastNames && _cachedFirstNames == null) _cachedFirstNames = File.ReadAllLines(PathHelper.firstNamePath);
-                if (useFirstAndLastNames && _cachedLastNames == null) _cachedLastNames = File.ReadAllLines(PathHelper.lastNamePath);
-                if (!useFirstAndLastNames && _cachedMonoNames == null) _cachedMonoNames = File.ReadAllLines(PathHelper.monoNamePath);
+            System.Random random = new System.Random();
 
-                System.Random random = new System.Random();
+            bool hasSuffix = useFirstAndLastNames && chanceSuffix != 0 && random.NextDouble() < chanceSuffix;
+            bool hasTitle = useFirstAndLastNames && chanceTitle != 0 && random.NextDouble() < chanceTitle;
 
-                if (useFirstAndLastNames && (_cachedFirstNames.Length < 1 || _cachedLastNames.Length < 1) || !useFirstAndLastNames && _cachedMonoNames.Length < 1) return "John Doe";
+            if (useFirstAndLastNames && _cachedFirstNames == null) _cachedFirstNames = File.ReadAllLines(PathHelper.firstNamePath);
+            if (useFirstAndLastNames && _cachedLastNames == null) _cachedLastNames = File.ReadAllLines(PathHelper.lastNamePath);
+            if (!useFirstAndLastNames && _cachedMonoNames == null) _cachedMonoNames = File.ReadAllLines(PathHelper.monoNamePath);
+            if (hasSuffix && _cachedSuffixes == null) _cachedSuffixes = File.ReadAllLines(PathHelper.nameSuffixPath);
+            if (hasTitle && _cachedTitles == null) _cachedTitles = File.ReadAllLines(PathHelper.nameTitlePath);
 
-                name = useFirstAndLastNames ? _cachedFirstNames[random.Next(_cachedFirstNames.Length)] + " " + _cachedLastNames[random.Next(_cachedLastNames.Length)] : _cachedMonoNames[_cachedMonoNames.Length];
-            } catch (Exception e)
-            {
-                Logger.Log("error while getting random name: " + e);
-                Logger.Log("Cached mono names: " + _cachedMonoNames.ToString());
-            }
-            
-            return name;
+            if ((hasTitle && _cachedTitles.Length < 1) || (hasSuffix && _cachedSuffixes.Length < 1) || (useFirstAndLastNames && (_cachedFirstNames.Length < 1 || _cachedLastNames.Length < 1)) || (!useFirstAndLastNames && _cachedMonoNames.Length < 1)) return "John Doe";
+
+            return (useFirstAndLastNames ? (hasTitle ? _cachedTitles[random.Next(_cachedTitles.Length)] : _cachedFirstNames[random.Next(_cachedFirstNames.Length)]) + " " + _cachedLastNames[random.Next(_cachedLastNames.Length)] : _cachedMonoNames[random.Next(_cachedMonoNames.Length)]) + (hasSuffix ? " " + _cachedSuffixes[random.Next(_cachedSuffixes.Length)] : "");
         }
 
         public static bool ValidateName(string name)
@@ -99,5 +99,7 @@ namespace Pseudonyms.Utils
         public static string firstNamePath = Path.GetDirectoryName(Application.dataPath) + "/SalemModLoader/ModFolders/Pseudonyms/FirstNames.txt";
         public static string lastNamePath = Path.GetDirectoryName(Application.dataPath) + "/SalemModLoader/ModFolders/Pseudonyms/LastNames.txt";
         public static string monoNamePath = Path.GetDirectoryName(Application.dataPath) + "/SalemModLoader/ModFolders/Pseudonyms/MonoNames.txt";
+        public static string nameSuffixPath = Path.GetDirectoryName(Application.dataPath) + "/SalemModLoader/ModFolders/Pseudonyms/NameSuffixes.txt";
+        public static string nameTitlePath = Path.GetDirectoryName(Application.dataPath) + "/SalemModLoader/ModFolders/Pseudonyms/NameTitles.txt";
     }
 }

@@ -18,7 +18,9 @@ namespace Pseudonyms
         {
             "FirstNames.txt",
             "LastNames.txt",
-            "MonoNames.txt"
+            "MonoNames.txt",
+            "NameSuffixes.txt",
+            "NameTitles.txt"
         };
 
         public static void Start()
@@ -100,6 +102,71 @@ namespace Pseudonyms
             
 
             if (ModSettings.GetBool("Random Names", "voidbehemoth.pseudonyms")) Utils.NameHelper.SetRandomName();
+        }
+    }
+
+    // Shamelessly stolen from the SalemModLoader code base
+    public class FromAssetBundle
+    {
+        public static AssetBundle GetAssetBundleFromResources(string filename, Assembly execAssembly)
+        {
+            if (Environment.OSVersion.Platform == PlatformID.MacOSX || Environment.OSVersion.Platform == PlatformID.Unix)
+            {
+                filename += "_mac";
+                Console.WriteLine("MAC ASSETBUNDLE IN USE!");
+            }
+
+            string name = execAssembly.GetManifestResourceNames().Single((string str) => str.EndsWith(filename));
+            using Stream stream = execAssembly.GetManifestResourceStream(name);
+            return AssetBundle.LoadFromStream(stream);
+        }
+
+        public static Material LoadMaterial(string bundleName, string material)
+        {
+            AssetBundle assetBundleFromResources = GetAssetBundleFromResources(bundleName, Assembly.GetCallingAssembly());
+            Material result = assetBundleFromResources.LoadAsset<Material>(material);
+            if (assetBundleFromResources != null)
+            {
+                assetBundleFromResources.Unload(false);
+            }
+
+            return result;
+        }
+
+        public static Sprite LoadSprite(string bundleName, string sprite)
+        {
+            AssetBundle assetBundleFromResources = GetAssetBundleFromResources(bundleName, Assembly.GetCallingAssembly());
+            Sprite result = assetBundleFromResources.LoadAsset<Sprite>(sprite);
+            if (assetBundleFromResources != null)
+            {
+                assetBundleFromResources.Unload(false);
+            }
+
+            return result;
+        }
+
+        public static GameObject LoadGameObject(string bundleName, string obj)
+        {
+            AssetBundle assetBundleFromResources = GetAssetBundleFromResources(bundleName, Assembly.GetCallingAssembly());
+            GameObject result = assetBundleFromResources.LoadAsset<GameObject>(obj);
+            if (assetBundleFromResources != null)
+            {
+                assetBundleFromResources.Unload(false);
+            }
+
+            return result;
+        }
+
+        public static T LoadAsset<T>(string bundleName, string asset) where T : UnityEngine.Object
+        {
+            AssetBundle assetBundleFromResources = GetAssetBundleFromResources(bundleName, Assembly.GetCallingAssembly());
+            T result = assetBundleFromResources.LoadAsset<T>(asset);
+            if (assetBundleFromResources != null)
+            {
+                assetBundleFromResources.Unload(false);
+            }
+
+            return result;
         }
     }
 }
