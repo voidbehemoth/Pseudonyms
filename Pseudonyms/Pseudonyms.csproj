@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
 	<PropertyGroup>
 		<TargetFramework>net481</TargetFramework>
@@ -26,6 +26,8 @@
 		<EmbeddedResource Include="resources\config\NameTitles.txt" />
 		<EmbeddedResource Include="resources\config\LastNames.txt"></EmbeddedResource>
 		<EmbeddedResource Include="resources\config\MonoNames.txt"></EmbeddedResource>
+		<EmbeddedResource Include="resources\Pseudonyms.resources.assetbundles.pseudonyms_mac"></EmbeddedResource>
+		<EmbeddedResource Include="resources\Pseudonyms.resources.assetbundles.pseudonyms"></EmbeddedResource>
 		<EmbeddedResource Include="resources\Pseudonyms.modinfo.json"></EmbeddedResource>
 	</ItemGroup>
 
@@ -45,10 +47,8 @@
 		<Reference Include="UnityEngine.AssetBundleModule">
 			<HintPath>.\libs\UnityEngine.AssetBundleModule.dll</HintPath>
 		</Reference>
-	</ItemGroup>
-
-	<ItemGroup>
-		<Folder Include="libs\" />
-		<Folder Include="resources\assetbundles\" />
+		<Reference Include="TMPro">
+			<HintPath>.\libs\Unity.TextMeshPro.dll</HintPath>
+		</Reference>
 	</ItemGroup>
 </Project>

@@ -1,45 +1,57 @@
 ﻿using Game.Interface;
 using HarmonyLib;
-using Home.HomeScene;
-using SalemModLoaderUI;
-using SML;
 using UnityEngine;
 using UnityEngine.UI;
+using System;
+using TMPro;
+using Utils;
 
 namespace Pseudonyms.UI
 {
-    public class PseudonymsUI
-    {
-
-        private void CacheObjects(PickNamesPanel __instance)
-        {
-            // __instance.rerollButton = 
-        }
-    }
-
-    /*[HarmonyPatch(typeof(PickNamesPanel), "Start")]
+    [HarmonyPatch(typeof(PickNamesPanel), "Start")]
     public class PseudonymsPickNamesPanelPatch
     {
+        public static PickNamesPanel INSTANCE;
+
         [HarmonyPostfix]
         public static void Postfix(PickNamesPanel __instance)
         {
-            GameObject gameObject = Object.Instantiate(FromAssetBundle.LoadGameObject("Pseudonyms.resources.assetbundles.pseudonyms", "PseudonymsPickNamesUIPanel"));
+            Utils.Logger.Log("Adding PickNamesPlus");
+            INSTANCE = __instance;
+            __instance.gameObject.AddComponent<PickNamesPlus>();
+        }
+    }
+
+    public class PickNamesPlus : MonoBehaviour
+    {
+
+        public Button rerollNameButton;
+
+        public void Awake()
+        {
+            Setup();
+            rerollNameButton.onClick.AddListener(RerollNameButtonClicked);
         }
 
-        [HarmonyPatch(typeof(HomeSceneController), "Start")]
-        public class SalemModLoaderHomeScenePatch
+        private void Setup()
         {
-            [HarmonyPostfix]
-            public static void Postfix(HomeSceneController __instance)
-            {
-                GameObject gameObject = Object.Instantiate(FromAssetBundle.LoadGameObject("SalemModLoader.resources.assetbundles.salemmodloader", "SalemModLoaderMainUIPanel"));
-                gameObject.name = "SalemModLoaderUI";
-                gameObject.transform.SetParent(__instance.SafeArea.transform);
-                gameObject.transform.SetAsLastSibling();
-                gameObject.transform.localPosition = new Vector3(0f, 0f, 0f);
-                gameObject.transform.localScale = new Vector3(1f, 1f, 1f);
-                gameObject.AddComponent<SalemModLoaderMainMenuController>();
-            }
+            Button SubmitButton = PseudonymsPickNamesPanelPatch.INSTANCE.submitButton;
+            rerollNameButton = Instantiate(Main.RerollNameButton, SubmitButton.gameObject.transform.parent).GetComponent<Button>();
+            rerollNameButton.transform.SetAsLastSibling();
+            rerollNameButton.gameObject.transform.localPosition = new Vector3(500f, 0f, 0f);
+            rerollNameButton.gameObject.transform.localScale = new Vector3(1f, 1f, 1f);
+            Utils.Logger.Log("Added button");
         }
-    }*/
+
+        public void RerollNameButtonClicked()
+        {
+            PickNamesPanel pickNamesPanel = gameObject.GetComponentInParent<PickNamesPanel>();
+
+            Utils.NameHelper.SetRandomName();
+            Utils.Logger.Log("Button clicked!");
+
+            string @string = Storage.GetString(Storage.Key.GameName, "");
+            pickNamesPanel.nameInput.text = @string;
+        }
+    }
 }

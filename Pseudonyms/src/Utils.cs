@@ -33,7 +33,6 @@ namespace Pseudonyms.Utils
 
         public static void SetRandomName()
         {
-            if (Pepper.IsMyInGameNameSet()) return;
 
             Logger.Log("Setting random name");
 

@@ -1,5 +1,6 @@
 ﻿using Game.Interface;
 using HarmonyLib;
+using Server.Shared.Extensions;
 using Server.Shared.Info;
 using Services;
 using SML;
@@ -8,6 +9,7 @@ using System.IO;
 using System.Linq;
 using System.Reflection;
 using UnityEngine;
+using UnityEngine.UI;
 
 namespace Pseudonyms
 {
@@ -23,12 +25,15 @@ namespace Pseudonyms
             "NameTitles.txt"
         };
 
+        public static GameObject RerollNameButton;
+
         public static void Start()
         {
             Utils.Logger.Log("ain't no way");
 
             GenerateDirectories();
             GenerateFiles();
+            LoadButton();
         }
 
         public static void GenerateDirectories()
@@ -59,6 +64,23 @@ namespace Pseudonyms
                 File.WriteAllText(Path.GetDirectoryName(Application.dataPath) + "/SalemModLoader/ModFolders/Pseudonyms/" + fileName, result);
             }
         }
+
+        public static void LoadButton()
+        {
+            try
+            {
+                AssetBundle assetBundleFromResources = FromAssetBundle.GetAssetBundleFromResources("Pseudonyms.resources.assetbundles.pseudonyms", Assembly.GetExecutingAssembly());
+                RerollNameButton = assetBundleFromResources.LoadAsset<GameObject>("RerollNameButton");
+                if (assetBundleFromResources != null)
+                {
+                    assetBundleFromResources.Unload(false);
+                }
+            } catch (Exception ex)
+            {
+                Utils.Logger.Log("button error: " + ex);
+            }
+            
+        }
     }
 
 
@@ -71,11 +93,11 @@ namespace Pseudonyms
         public const string PLUGIN_VERSION = "1.0.0";
     }
 
-    
+
     [HarmonyPatch(typeof(EndgameWrapupOverlayController))]
     public class ListenerHandler
     {
-        
+
         [HarmonyPostfix]
         [HarmonyPatch("InitializeListeners")]
         public static void InitializeListeners()
@@ -85,7 +107,7 @@ namespace Pseudonyms
             gameInfo.OnDataChanged = (Action<GameInfo>)Delegate.Combine(gameInfo.OnDataChanged, new Action<GameInfo>(HandleGamePhaseChanged));
         }
 
-        
+
         [HarmonyPostfix]
         [HarmonyPatch("OnDestroy")]
         public static void OnDestroy()
@@ -97,76 +119,11 @@ namespace Pseudonyms
 
         public static void HandleGamePhaseChanged(GameInfo gameInfo)
         {
-            if (gameInfo.gamePhase != Server.Shared.State.GamePhase.PICK_NAMES) return;
+            if (gameInfo.gamePhase != Server.Shared.State.GamePhase.PICK_NAMES || Pepper.IsMyInGameNameSet()) return;
 
-            
+
 
             if (ModSettings.GetBool("Random Names", "voidbehemoth.pseudonyms")) Utils.NameHelper.SetRandomName();
-        }
-    }
-
-    // Shamelessly stolen from the SalemModLoader code base
-    public class FromAssetBundle
-    {
-        public static AssetBundle GetAssetBundleFromResources(string filename, Assembly execAssembly)
-        {
-            if (Environment.OSVersion.Platform == PlatformID.MacOSX || Environment.OSVersion.Platform == PlatformID.Unix)
-            {
-                filename += "_mac";
-                Console.WriteLine("MAC ASSETBUNDLE IN USE!");
-            }
-
-            string name = execAssembly.GetManifestResourceNames().Single((string str) => str.EndsWith(filename));
-            using Stream stream = execAssembly.GetManifestResourceStream(name);
-            return AssetBundle.LoadFromStream(stream);
-        }
-
-        public static Material LoadMaterial(string bundleName, string material)
-        {
-            AssetBundle assetBundleFromResources = GetAssetBundleFromResources(bundleName, Assembly.GetCallingAssembly());
-            Material result = assetBundleFromResources.LoadAsset<Material>(material);
-            if (assetBundleFromResources != null)
-            {
-                assetBundleFromResources.Unload(false);
-            }
-
-            return result;
-        }
-
-        public static Sprite LoadSprite(string bundleName, string sprite)
-        {
-            AssetBundle assetBundleFromResources = GetAssetBundleFromResources(bundleName, Assembly.GetCallingAssembly());
-            Sprite result = assetBundleFromResources.LoadAsset<Sprite>(sprite);
-            if (assetBundleFromResources != null)
-            {
-                assetBundleFromResources.Unload(false);
-            }
-
-            return result;
-        }
-
-        public static GameObject LoadGameObject(string bundleName, string obj)
-        {
-            AssetBundle assetBundleFromResources = GetAssetBundleFromResources(bundleName, Assembly.GetCallingAssembly());
-            GameObject result = assetBundleFromResources.LoadAsset<GameObject>(obj);
-            if (assetBundleFromResources != null)
-            {
-                assetBundleFromResources.Unload(false);
-            }
-
-            return result;
-        }
-
-        public static T LoadAsset<T>(string bundleName, string asset) where T : UnityEngine.Object
-        {
-            AssetBundle assetBundleFromResources = GetAssetBundleFromResources(bundleName, Assembly.GetCallingAssembly());
-            T result = assetBundleFromResources.LoadAsset<T>(asset);
-            if (assetBundleFromResources != null)
-            {
-                assetBundleFromResources.Unload(false);
-            }
-
-            return result;
         }
     }
 }
