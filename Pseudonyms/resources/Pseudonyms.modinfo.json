@@ -12,7 +12,7 @@
       {
         "Name": "Chance of Title (%)",
         "SettingID": "suffix.chance.slider",
-        "Description": "Chance",
+        "Description": "The chance of a title being included in the name.",
         "DefaultValue": 10,
         "MinValue": 0,
         "MaxValue": 100,
@@ -21,7 +21,7 @@
       {
         "Name": "Chance of Suffix (%)",
         "SettingID": "suffix.chance.slider",
-        "Description": "",
+        "Description": "The chance of a suffix being included in the name.",
         "DefaultValue": 5,
         "MinValue": 0,
         "MaxValue": 100,
@@ -32,7 +32,8 @@
       {
         "Name": "Name Format",
         "SettingID": "name.format.dropdown",
-        "Description": "Which format to use when generating names",
+        "Description": "Which format to use when generating names.",
+        "DefaultValue": "First & Last Names (+ suffixes & titles)",
         "Options": [
           "Simple Names",
           "First & Last Names",
