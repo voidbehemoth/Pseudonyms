@@ -169,14 +169,9 @@ namespace Pseudonyms.Utils
 
         public static bool ValidateName(string name)
         {
-            bool valid;
-            valid = (Regex.IsMatch(name, @"^[a-zA-Z ]+$") && name.Length <= 16);
-
-            string chatToCheck = name;
-            Service.Game.ProfanityFilter.FilterText(Service.Home.LocalizationService.GetUILanguageId(), ref chatToCheck, out var hasProfanity);
-            valid = valid && !hasProfanity;
-
-            return valid;
+            Service.Game.ProfanityFilter.FilterText(Service.Home.LocalizationService.GetUILanguageId(), ref name, out var hasProfanity);
+    
+            return !hasProfanity && name.Length <= 20;
         }
     }
 
