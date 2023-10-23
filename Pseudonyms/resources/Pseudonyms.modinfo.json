@@ -11,7 +11,8 @@
     "IntegerInputSettings": [
       {
         "Name": "Chance of Title (%)",
-        "Description": "title.chance.slider",
+        "SettingID": "suffix.chance.slider",
+        "Description": "Chance",
         "DefaultValue": 10,
         "MinValue": 0,
         "MaxValue": 100,
@@ -35,7 +36,7 @@
         "Options": [
           "Simple Names",
           "First & Last Names",
-          "First & Last Names (+ prefixes & titles)"
+          "First & Last Names (+ suffixes & titles)"
         ],
         "AvailableInGame": true
       }

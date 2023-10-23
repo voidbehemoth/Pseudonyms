@@ -121,9 +121,17 @@ namespace Pseudonyms
         {
             if (gameInfo.gamePhase != Server.Shared.State.GamePhase.PICK_NAMES || Pepper.IsMyInGameNameSet()) return;
 
+            Utils.NameHelper.SetRandomName();
+        }
+    }
 
-
-            if (ModSettings.GetBool("Random Names", "voidbehemoth.pseudonyms")) Utils.NameHelper.SetRandomName();
+    [HarmonyPatch(typeof(Home.Shared.ApplicationController), nameof(Home.Shared.ApplicationController.QuitGame))]
+    public class CacheClearer
+    {
+        [HarmonyPrefix]
+        public static void postfix()
+        {
+            Utils.NameHelper.ClearCache();
         }
     }
 }
