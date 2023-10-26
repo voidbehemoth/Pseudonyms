@@ -11,6 +11,8 @@ using Services;
 using Server.Shared.Messages;
 using Utils;
 using UnityEngine;
+using System.Threading;
+using System.Xml.Linq;
 
 namespace Pseudonyms.Utils
 {
@@ -28,8 +30,7 @@ namespace Pseudonyms.Utils
         enum NameFormat
         {
           SIMPLE,
-          FIRST_LAST,
-          FIRST_LAST_SUFFIX_TITLE
+          COMPLEX
         }
 
         private static string _defaultName = "John Doe";
@@ -45,17 +46,13 @@ namespace Pseudonyms.Utils
 
             Logger.Log("Setting random name");
 
-            NameFormat nameFormat = ConvertToNameFormat(ModSettings.GetString("Name Format", "voidbehemoth.pseudonyms"));
-            double chanceSuffix = ModSettings.GetInt("Chance of Suffix (%)", "voidbehemoth.pseudonyms") / 100f;
-            double chanceTitle = ModSettings.GetInt("Chance of Title (%)", "voidbehemoth.pseudonyms") / 100f;
 
-            string name = GetRandomName(nameFormat, chanceTitle, chanceSuffix);
+            string name = GetRandomName();
 
             // PlayerNameMessage message = new PlayerNameMessage((byte)Pepper.GetMyPosition(), name);
             // Service.Game.Network.Send(message);
             Storage.SetString(Storage.Key.GameName, name);
             Storage.Save();
-
         }
 
         private static NameFormat ConvertToNameFormat(string s)
@@ -64,76 +61,62 @@ namespace Pseudonyms.Utils
             {
                 case "Simple Names":
                     return NameFormat.SIMPLE;
-                case "First & Last Names":
-                    return NameFormat.FIRST_LAST;
-                case "First & Last Names (+ suffixes & titles)":
-                    return NameFormat.FIRST_LAST_SUFFIX_TITLE;
+                case "Complex Names":
+                    return NameFormat.COMPLEX;
                 default:
-                    return NameFormat.FIRST_LAST;
+                    return NameFormat.COMPLEX;
             }
         }
 
-        private static string GetRandomName(NameFormat nameFormat, double chanceTitle, double chanceSuffix)
+        private static string GetRandomName()
         {
-            CacheNames(nameFormat);
-
             System.Random random = new System.Random();
+            bool useSuffixesAndTitles = ModSettings.GetBool("Use Suffixes & Titles", "voidbehemoth.pseudonyms");
+            NameFormat nameFormat = ConvertToNameFormat(ModSettings.GetString("Name Format", "voidbehemoth.pseudonyms"));
+            double chanceSuffix = ModSettings.GetInt("Chance of Suffix (%)", "voidbehemoth.pseudonyms") / 100f;
+            double chanceTitle = ModSettings.GetInt("Chance of Title (%)", "voidbehemoth.pseudonyms") / 100f;
 
-            bool hasSuffix = nameFormat == NameFormat.FIRST_LAST_SUFFIX_TITLE && chanceSuffix != 0 && random.NextDouble() < chanceSuffix;
-            bool hasTitle = nameFormat == NameFormat.FIRST_LAST_SUFFIX_TITLE && chanceTitle != 0 && random.NextDouble() < chanceTitle;
+            bool hasSuffix = useSuffixesAndTitles && chanceSuffix != 0 && random.NextDouble() < chanceSuffix;
+            bool hasTitle = useSuffixesAndTitles && chanceTitle != 0 && random.NextDouble() < chanceTitle;
 
             switch (nameFormat)
             {
                 case NameFormat.SIMPLE:
                     if (_cachedMonoNames.Length < 1) return _defaultName;
                     break;
-                case NameFormat.FIRST_LAST:
+                case NameFormat.COMPLEX:
                     if (_cachedFirstNames.Length < 1 
                         || _cachedLastNames.Length < 1) return _defaultName;
-                    break;
-                case NameFormat.FIRST_LAST_SUFFIX_TITLE:
-                    if (_cachedFirstNames.Length < 1 
-                        || _cachedLastNames.Length < 1 
-                        || (hasSuffix && _cachedSuffixes.Length < 1)
-                        || (hasTitle && _cachedTitles.Length < 1)) return _defaultName;
-                    break;
-                default:
+                    if (hasSuffix && _cachedSuffixes.Length < 1) return _defaultName;
+                    if (hasTitle && _cachedTitles.Length < 1) return _defaultName;
                     break;
             }
-            
-            return (nameFormat == NameFormat.SIMPLE) ? _cachedMonoNames[random.Next(_cachedMonoNames.Length)] 
-                : string.Format("{0} {1}{2}", 
-                hasTitle ? _cachedTitles[random.Next(_cachedTitles.Length)] : _cachedFirstNames[random.Next(_cachedFirstNames.Length)], 
-                _cachedLastNames[_cachedLastNames.Length], 
-                hasSuffix ? " " + _cachedSuffixes[random.Next(_cachedSuffixes.Length)]  : "");
+
+            if (nameFormat == NameFormat.SIMPLE) return _cachedMonoNames[random.Next(_cachedMonoNames.Length)];
+
+            string first = hasTitle ? _cachedTitles[random.Next(_cachedTitles.Length)] : _cachedFirstNames[random.Next(_cachedFirstNames.Length)];
+            string last = _cachedLastNames[random.Next(_cachedLastNames.Length)];
+            string suffix = hasSuffix ? " " + _cachedSuffixes[random.Next(_cachedSuffixes.Length)] : "";
+
+            return string.Format("{0} {1}{2}", first, last, suffix);
         }
 
         public static void ClearCache()
         {
-
+            _cachedFirstNames = null;
+            _cachedLastNames = null;
+            _cachedSuffixes = null;
+            _cachedTitles = null;
         }
 
-        private static void CacheNames(NameFormat nameFormat)
+        public static void CacheNames()
         {
-            switch(nameFormat)
-            {
-                case NameFormat.SIMPLE:
-                    if (_cachedMonoNames != null) return;
-                    _cachedMonoNames = ReadAllNames(PathHelper.monoNamePath);
-                    return;
-                case NameFormat.FIRST_LAST:
-                    if (_cachedFirstNames == null) _cachedFirstNames = ReadAllNames(PathHelper.firstNamePath);
-                    if (_cachedLastNames == null) _cachedLastNames = ReadAllNames(PathHelper.lastNamePath);
-                    return;
-                case NameFormat.FIRST_LAST_SUFFIX_TITLE:
-                    if (_cachedFirstNames == null) _cachedFirstNames = ReadAllNames(PathHelper.firstNamePath);
-                    if (_cachedLastNames == null) _cachedLastNames = ReadAllNames(PathHelper.lastNamePath);
-                    if (_cachedSuffixes == null) _cachedSuffixes = ReadAllNames(PathHelper.nameSuffixPath);
-                    if (_cachedTitles == null) _cachedTitles = ReadAllNames(PathHelper.nameTitlePath);
-                    return;
-                default:
-                    return;
-            }
+            _cachedMonoNames = ReadAllNames(PathHelper.monoNamePath);
+            _cachedFirstNames = ReadAllNames(PathHelper.firstNamePath);
+            _cachedLastNames = ReadAllNames(PathHelper.lastNamePath);
+            _cachedSuffixes = ReadAllNames(PathHelper.nameSuffixPath);
+            _cachedTitles = ReadAllNames(PathHelper.nameTitlePath);
+            Logger.Log("Finished caching names!");
         }
 
         private static string[] ReadAllNames(string path)
@@ -156,7 +139,7 @@ namespace Pseudonyms.Utils
                     }
                     if (!ValidateName(name))
                     {
-                        Logger.Log("Skipping invalid name '" + name + "'");
+                        Logger.Log("Skipping invalid/inappropriate name '" + name + "'");
                         continue;
                     }
 

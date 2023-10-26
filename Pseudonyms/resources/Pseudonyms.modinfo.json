@@ -8,6 +8,15 @@
   "Version": "1.0.0",
   "RequiredMods": [],
   "Settings": {
+    "CheckboxSettings": [
+      {
+        "Name": "Use Suffixes & Titles",
+        "SettingID": "use.suffixes.titles",
+        "Description": "Whether or not to use suffixes and titles. Only works with complex names.",
+        "DefaultValue": true,
+        "AvailableInGame": true
+      }
+    ],
     "IntegerInputSettings": [
       {
         "Name": "Chance of Title (%)",
@@ -32,12 +41,11 @@
       {
         "Name": "Name Format",
         "SettingID": "name.format.dropdown",
-        "Description": "Which format to use when generating names.",
-        "DefaultValue": "First & Last Names (+ suffixes & titles)",
+        "Description": "Which format to use when generating names. Simple names are made of one part, whereas complex names are composed of a first and a last name.",
+        "DefaultValue": "Complex Names",
         "Options": [
           "Simple Names",
-          "First & Last Names",
-          "First & Last Names (+ suffixes & titles)"
+          "Complex Names"
         ],
         "AvailableInGame": true
       }

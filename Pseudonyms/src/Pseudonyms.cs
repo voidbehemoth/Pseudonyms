@@ -1,4 +1,5 @@
 ﻿using Game.Interface;
+using Game.Services;
 using HarmonyLib;
 using Server.Shared.Extensions;
 using Server.Shared.Info;
@@ -8,6 +9,7 @@ using System;
 using System.IO;
 using System.Linq;
 using System.Reflection;
+using System.Threading;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -30,7 +32,6 @@ namespace Pseudonyms
         public static void Start()
         {
             Utils.Logger.Log("ain't no way");
-
             GenerateDirectories();
             GenerateFiles();
             LoadButton();
@@ -132,6 +133,16 @@ namespace Pseudonyms
         public static void postfix()
         {
             Utils.NameHelper.ClearCache();
+        }
+    }
+
+    [HarmonyPatch(typeof(ProfanityFilterService), nameof(ProfanityFilterService.Init))]
+    public class Cacher
+    {
+        [HarmonyPostfix]
+        public static void postfix()
+        {
+            new Thread(Utils.NameHelper.CacheNames).Start();
         }
     }
 }
