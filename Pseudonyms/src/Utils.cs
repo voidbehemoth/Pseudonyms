@@ -10,6 +10,7 @@ using System.Threading;
 using System.Reflection;
 using System.Xml.Linq;
 using System.Linq;
+using System.Text.RegularExpressions;
 
 namespace Pseudonyms.Utils
 {
@@ -153,8 +154,9 @@ namespace Pseudonyms.Utils
         public static bool ValidateName(string name)
         {
             Service.Game.ProfanityFilter.FilterText(Service.Home.LocalizationService.GetUILanguageId(), ref name, out var hasProfanity);
-    
-            return !hasProfanity && name.Length <= 20;
+            bool regex = Regex.IsMatch(name, @"^[a-zA-Z ]+$");
+
+            return regex && !hasProfanity && name.Length <= 20 && name.Length >= 1;
         }
     }
 
