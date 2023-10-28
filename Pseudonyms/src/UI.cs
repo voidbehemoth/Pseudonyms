@@ -5,6 +5,8 @@ using UnityEngine.UI;
 using System;
 using TMPro;
 using Utils;
+using SML;
+using System.Reflection;
 
 namespace Pseudonyms.UI
 {

@@ -30,6 +30,7 @@
 		<EmbeddedResource Include="resources\Pseudonyms.resources.assetbundles.pseudonyms_mac" />
 		<EmbeddedResource Include="resources\Pseudonyms.resources.assetbundles.pseudonyms" />
 		<EmbeddedResource Include="resources\Pseudonyms.modinfo.json" />
+		<EmbeddedResource Include="resources\Pseudonyms.resources.images.thumbnail.png" />
 	</ItemGroup>
 
 	<ItemGroup>
@@ -53,6 +54,9 @@
 		<Reference Include="UnityEngine.AssetBundleModule">
 			<HintPath>.\libs\UnityEngine.AssetBundleModule.dll</HintPath>
 		</Reference>
+		<Reference Include="UnityEngine.ImageConversionModule">
+			<HintPath>.\libs\UnityEngine.ImageConversionModule.dll</HintPath>
+		</Reference>
 		<Reference Include="TMPro">
 			<HintPath>.\libs\Unity.TextMeshPro.dll</HintPath>
 		</Reference>
@@ -66,6 +70,7 @@
 		<Exec Command="robocopy &quot;$(SteamLibraryPath)\steamapps\common\Town of Salem 2\TownOfSalem2_Data\Managed&quot; .\libs UnityEngine.CoreModule.dll /j /mt" IgnoreExitCode="true"/>
 		<Exec Command="robocopy &quot;$(SteamLibraryPath)\steamapps\common\Town of Salem 2\TownOfSalem2_Data\Managed&quot; .\libs UnityEngine.UI.dll /j /mt" IgnoreExitCode="true"/>
 		<Exec Command="robocopy &quot;$(SteamLibraryPath)\steamapps\common\Town of Salem 2\TownOfSalem2_Data\Managed&quot; .\libs UnityEngine.AssetBundleModule.dll /j /mt" IgnoreExitCode="true"/>
+		<Exec Command="robocopy &quot;$(SteamLibraryPath)\steamapps\common\Town of Salem 2\TownOfSalem2_Data\Managed&quot; .\libs UnityEngine.ImageConversionModule.dll /j /mt" IgnoreExitCode="true"/>
 		<Exec Command="robocopy &quot;$(SteamLibraryPath)\steamapps\common\Town of Salem 2\TownOfSalem2_Data\Managed&quot; .\libs Unity.TextMeshPro.dll /j /mt" IgnoreExitCode="true"/>
 	</Target>
 </Project>

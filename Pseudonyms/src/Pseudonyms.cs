@@ -1,6 +1,7 @@
 ﻿using Game.Interface;
 using Game.Services;
 using HarmonyLib;
+using SalemModLoader;
 using Server.Shared.Extensions;
 using Server.Shared.Info;
 using Services;
@@ -28,13 +29,20 @@ namespace Pseudonyms
         };
 
         public static GameObject RerollNameButton;
+        public static Sprite ReloadNamesSprite;
 
         public static void Start()
         {
+            ReloadNamesSprite = Utils.LoadEmbeddedResources.LoadSprite("Pseudonyms.resources.images.thumbnail.png");
             Utils.Logger.Log("ain't no way");
             GenerateDirectories();
             GenerateFiles();
             LoadButton();
+            LoadSprite();
+        }
+
+        private static void LoadSprite()
+        {
         }
 
         public static void GenerateDirectories()
@@ -84,7 +92,19 @@ namespace Pseudonyms
         }
     }
 
-
+    [Mod.SalemMenuItem]
+    public class AddReloadButton
+    {
+        public static Mod.SalemMenuButton pseudonymsButton = new Mod.SalemMenuButton
+        {
+            Label = "Reload Names",
+            Icon = Main.ReloadNamesSprite,
+            OnClick = () =>
+            {
+                Utils.NameHelper.CacheNames();
+            }
+        };
+    }
     public static class ModInfo
     {
         public const string PLUGIN_GUID = "Pseudonyms";
@@ -142,7 +162,7 @@ namespace Pseudonyms
         [HarmonyPostfix]
         public static void postfix()
         {
-            new Thread(Utils.NameHelper.CacheNames).Start();
+            Utils.NameHelper.CacheNames();
         }
     }
 }

@@ -1,18 +1,15 @@
-﻿using SalemModLoaderUI;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Linq;
 using System.Text;
-using System.Text.RegularExpressions;
-using System.Threading.Tasks;
 using SML;
 using Services;
-using Server.Shared.Messages;
 using Utils;
 using UnityEngine;
 using System.Threading;
+using System.Reflection;
 using System.Xml.Linq;
+using System.Linq;
 
 namespace Pseudonyms.Utils
 {
@@ -111,13 +108,16 @@ namespace Pseudonyms.Utils
 
         public static void CacheNames()
         {
-            _cachedMonoNames = ReadAllNames(PathHelper.monoNamePath);
-            _cachedFirstNames = ReadAllNames(PathHelper.firstNamePath);
-            _cachedLastNames = ReadAllNames(PathHelper.lastNamePath);
-            _cachedSuffixes = ReadAllNames(PathHelper.nameSuffixPath);
-            _cachedTitles = ReadAllNames(PathHelper.nameTitlePath);
-            Logger.Log("Finished caching names!");
-        }
+            new Thread(() =>
+            {
+                _cachedMonoNames = ReadAllNames(PathHelper.monoNamePath);
+                _cachedFirstNames = ReadAllNames(PathHelper.firstNamePath);
+                _cachedLastNames = ReadAllNames(PathHelper.lastNamePath);
+                _cachedSuffixes = ReadAllNames(PathHelper.nameSuffixPath);
+                _cachedTitles = ReadAllNames(PathHelper.nameTitlePath);
+                Logger.Log("Finished caching names!");
+            }).Start();
+        }    
 
         private static string[] ReadAllNames(string path)
         {
@@ -165,5 +165,37 @@ namespace Pseudonyms.Utils
         public static string monoNamePath = Path.GetDirectoryName(Application.dataPath) + "/SalemModLoader/ModFolders/Pseudonyms/MonoNames.txt";
         public static string nameSuffixPath = Path.GetDirectoryName(Application.dataPath) + "/SalemModLoader/ModFolders/Pseudonyms/NameSuffixes.txt";
         public static string nameTitlePath = Path.GetDirectoryName(Application.dataPath) + "/SalemModLoader/ModFolders/Pseudonyms/NameTitles.txt";
+    }
+
+    public class LoadEmbeddedResources
+    {
+        public static Sprite LoadSprite(string filePath, float pixelsPerUnit = 100f, SpriteMeshType spriteType = SpriteMeshType.Tight)
+        {
+            Texture2D texture2D = LoadTexture(filePath);
+            return Sprite.Create(texture2D, new Rect(0f, 0f, texture2D.width, texture2D.height), new Vector2(0f, 0f), pixelsPerUnit, 0u, spriteType);
+        }
+
+        public static Texture2D LoadTexture(string fileName)
+        {
+            Assembly execAssembly = Assembly.GetExecutingAssembly();
+            string filePath = execAssembly.GetManifestResourceNames().Single((string str) => str.EndsWith(fileName));
+            Stream manifestResourceStream = execAssembly.GetManifestResourceStream(filePath);
+            if (manifestResourceStream == null) Logger.Log("Manifest resource stream is null!");
+            Texture2D texture2D = new Texture2D(2, 2);
+            if (ImageConversion.LoadImage(texture2D, ReadFully(manifestResourceStream)))
+            {
+                return texture2D;
+            }
+
+            Logger.Log("File does not exist!");
+            return null;
+        }
+
+        private static byte[] ReadFully(Stream input)
+        {
+            using MemoryStream memoryStream = new MemoryStream();
+            input.CopyTo(memoryStream);
+            return memoryStream.ToArray();
+        }
     }
 }
