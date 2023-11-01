@@ -42,10 +42,9 @@
         "Name": "Name Format",
         "SettingID": "name.format.dropdown",
         "Description": "Which format to use when generating names. Simple names are made of one part, whereas complex names are composed of a first and a last name.",
-        "DefaultValue": "Complex Names",
         "Options": [
-          "Simple Names",
-          "Complex Names"
+          "Complex Names",
+          "Simple Names"
         ],
         "AvailableInGame": true
       }
