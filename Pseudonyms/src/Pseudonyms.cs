@@ -156,11 +156,11 @@ namespace Pseudonyms
         }
     }
 
-    [HarmonyPatch(typeof(ProfanityFilterService), nameof(ProfanityFilterService.Init))]
+    [HarmonyPatch(typeof(GameServices), nameof(GameServices.Init))]
     public class Cacher
     {
         [HarmonyPostfix]
-        public static void postfix()
+        public static void Init()
         {
             Utils.NameHelper.CacheNames();
         }

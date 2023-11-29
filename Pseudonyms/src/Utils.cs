@@ -8,7 +8,6 @@ using Utils;
 using UnityEngine;
 using System.Threading;
 using System.Reflection;
-using System.Xml.Linq;
 using System.Linq;
 using System.Text.RegularExpressions;
 
@@ -41,8 +40,6 @@ namespace Pseudonyms.Utils
 
         public static void SetRandomName()
         {
-
-            Logger.Log("Setting random name");
 
 
             string name = GetRandomName();
